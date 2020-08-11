@@ -9,6 +9,7 @@ namespace CabInvoiceGenerator
         private int COST_PER_MINUTE = 1;
         private int MINIMUM_FARE = 5;
         private double totalRidesFare=0;
+        private int noOfRides = 0;
 
         public double CalculateFare(double distanceInKm, int timeInMinutes)
         {
@@ -22,11 +23,29 @@ namespace CabInvoiceGenerator
 
         public double CalculateRidesFare(Ride[] rides)
         {
+
             foreach(var ride in rides)
             {
                 totalRidesFare +=CalculateFare(ride.distanceInKm,ride.timeInMinutes);
+                noOfRides++;
             }
             return totalRidesFare;
         }
+
+        public InvoiceSummary CalculateRidesFareSummary(Ride[] rides)
+        {
+            foreach (var ride in rides)
+            {
+                totalRidesFare += CalculateFare(ride.distanceInKm, ride.timeInMinutes);
+                noOfRides++;
+            }
+
+            InvoiceSummary invoiceSummary = new InvoiceSummary();
+            invoiceSummary.totalRidesFare = totalRidesFare;
+            invoiceSummary.noOfRides = noOfRides;
+            invoiceSummary.AverageFarePerRideCalculate();
+            return invoiceSummary;
+        }
+
     }
 }
