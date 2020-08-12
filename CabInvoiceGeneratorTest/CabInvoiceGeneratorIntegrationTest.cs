@@ -37,14 +37,31 @@ namespace CabInvoiceGeneratorTest
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
             Ride[] rides = { new Ride(2, 5), new Ride(0.1, 1) };
             var invoiceSummary = invoiceGenerator.CalculateRidesFareSummary(rides);
-            InvoiceSummary expected = new InvoiceSummary()
-            {
-                noOfRides = 2,
-                totalRidesFare = 30,
-                avgerageFarePerRide = 15
-            };
-            object.Equals(expected,invoiceSummary);
+            Assert.AreEqual(2,invoiceSummary.noOfRides);
+            Assert.AreEqual(30, invoiceSummary.totalRidesFare);
+            Assert.AreEqual(15, invoiceSummary.avgerageFarePerRide);
+        }
 
+        [Test]
+        public void GivenUerIDAndListOfRides_WhenCalculated_ThenShouldReturnInvoice()
+        {
+            string userId = "Priyansh Ankre";
+            Ride[] rides = { new Ride(2, 5), new Ride(0.1, 1) };
+            RideRepository rideRepository = new RideRepository();
+            rideRepository.AddUserIDRides(userId, rides);
+            InvoiceGenerator invoice = new InvoiceGenerator();
+            var total = invoice.CalculateRidesFare(rideRepository.GetRides(userId));
+            Assert.AreEqual(30, total);
+        }
+
+        [Test]
+        public void GivenUerIDAndListOfRides_WhenCalculated_ThenShouldNullUserException()
+        {
+            string userId = null;
+            Ride[] rides = { new Ride(2, 5), new Ride(0.1, 1) };
+            RideRepository rideRepository = new RideRepository();
+            InvoiceGeneratorException exception = Assert.Throws<InvoiceGeneratorException>(() => rideRepository.AddUserIDRides(userId, rides));
+            Assert.AreEqual(InvoiceGeneratorException.ExceptionType.NULL_USER_EXCEPTION, exception.type);
         }
     }
 }
