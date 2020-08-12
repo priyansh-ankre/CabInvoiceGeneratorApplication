@@ -8,11 +8,13 @@ namespace CabInvoiceGenerator
     {
         public double distanceInKm;
         public int timeInMinutes;
+        public string rideType;
 
-        public Ride(double distanceInKm, int timeInMinutes)
+        public Ride( string rideType,double distanceInKm, int timeInMinutes)
         {
             this.distanceInKm = distanceInKm;
             this.timeInMinutes = timeInMinutes;
+            this.rideType = rideType;
         }
     }
 }
