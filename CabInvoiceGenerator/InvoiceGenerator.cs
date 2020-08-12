@@ -5,9 +5,9 @@ namespace CabInvoiceGenerator
 {
     public class InvoiceGenerator
     {
-        private int COST_PER_KM = 10;
-        private int COST_PER_MINUTE = 1;
-        private int MINIMUM_FARE = 5;
+        private readonly int COST_PER_KM = 10;
+        private readonly int COST_PER_MINUTE = 1;
+        private readonly int MINIMUM_FARE = 5;
         private double totalRidesFare=0;
         private int noOfRides = 0;
 
@@ -27,7 +27,6 @@ namespace CabInvoiceGenerator
             foreach(var ride in rides)
             {
                 totalRidesFare +=CalculateFare(ride.distanceInKm,ride.timeInMinutes);
-                noOfRides++;
             }
             return totalRidesFare;
         }
