@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using CabInvoiceGenerator;
-using System.Collections.Generic;
 
 namespace CabInvoiceGeneratorTest
 {
@@ -10,7 +9,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenDistanceAndTime_WhenCalculatedInInvoiceGenerator_ThenShouldReturnTotalFare()
         {
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-            var fare = invoiceGenerator.CalculateFare("normal",2, 5);
+            var fare = invoiceGenerator.CalculateFare(CabRide.NORMAL,2, 5);
             Assert.AreEqual(25, fare);
         }
 
@@ -18,7 +17,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenDistanceAndTime_WhenCalculatedInInvoiceGenerator_ThenShouldReturnMinimumFare()
         {
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-            var fare = invoiceGenerator.CalculateFare("normal", 0.1, 1);
+            var fare = invoiceGenerator.CalculateFare(CabRide.NORMAL, 0.1, 1);
             Assert.AreEqual(5, fare);
         }
 
@@ -26,7 +25,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenMultipleRides_WhenCalculatedInInvoiceGenerator_ThenShouldReturnTotalFare()
         {
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-            Ride[] rides ={ new Ride("normal", 2,5),new Ride ("normal", 0.1,1) };
+            Ride[] rides ={ new Ride(CabRide.NORMAL, 2,5),new Ride (CabRide.NORMAL, 0.1,1) };
             var fare = invoiceGenerator.CalculateRidesFare(rides);
             Assert.AreEqual(30, fare.totalRidesFare);
         }
@@ -35,7 +34,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenMultipleRides_WhenCalculatedInInvoiceGenerator_ThenShouldReturnInvoiceSummary()
         {
             InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-            Ride[] rides = { new Ride("normal", 2, 5), new Ride("normal", 0.1, 1) };
+            Ride[] rides = { new Ride(CabRide.NORMAL, 2, 5), new Ride(CabRide.NORMAL, 0.1, 1) };
             var invoiceSummary = invoiceGenerator.CalculateRidesFare(rides);
             Assert.AreEqual(2,invoiceSummary.noOfRides);
             Assert.AreEqual(30, invoiceSummary.totalRidesFare);
@@ -46,7 +45,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenUerIDAndListOfRides_WhenCalculated_ThenShouldReturnInvoice()
         {
             string userId = "Priyansh Ankre";
-            Ride[] rides = { new Ride("normal", 2, 5), new Ride("normal", 0.1, 1) };
+            Ride[] rides = { new Ride(CabRide.NORMAL, 2, 5), new Ride(CabRide.NORMAL, 0.1, 1) };
             RideRepository rideRepository = new RideRepository();
             rideRepository.AddUserIDRides(userId, rides);
             InvoiceGenerator invoice = new InvoiceGenerator();
@@ -58,7 +57,7 @@ namespace CabInvoiceGeneratorTest
         public void GivenUerIDAndListOfRides_WhenCalculated_ThenShouldNullUserException()
         {
             string userId = null;
-            Ride[] rides = { new Ride("normal", 2, 5), new Ride("normal", 0.1, 1) };
+            Ride[] rides = { new Ride(CabRide.NORMAL, 2, 5), new Ride(CabRide.NORMAL, 0.1, 1) };
             RideRepository rideRepository = new RideRepository();
             InvoiceGeneratorException exception = Assert.Throws<InvoiceGeneratorException>(() => rideRepository.AddUserIDRides(userId, rides));
             Assert.AreEqual(InvoiceGeneratorException.ExceptionType.NULL_USER_EXCEPTION, exception.type);
@@ -68,16 +67,16 @@ namespace CabInvoiceGeneratorTest
         public void GivenUerIDAndListOfRides_WhenCalculated_ThenShouldReturnPremiumInvoice()
         {
             string userId1 = "Priyansh";
-            //string userId2 = "Ankre";
-            Ride[] rides1 = { new Ride("premium", 2, 5), new Ride("premium", 0.1, 1) };
-            Ride[] rides2 = { new Ride("premium", 2, 5), new Ride("premium", 0.1, 1) };
+            string userId2 = "Ankre";
+            Ride[] rides1 = { new Ride(CabRide.PREMIUM, 2, 5), new Ride(CabRide.PREMIUM, 0.1, 1) };
+            Ride[] rides2 = { new Ride(CabRide.PREMIUM, 2, 5), new Ride(CabRide.PREMIUM, 0.1, 1) };
             RideRepository rideRepository = new RideRepository();
             rideRepository.AddUserIDRides(userId1, rides1);
-            //rideRepository.AddUserIDRides(userId2, rides2);
+            rideRepository.AddUserIDRides(userId2, rides2);
             InvoiceGenerator invoice = new InvoiceGenerator();
             var total1 = invoice.CalculateRidesFare(rideRepository.GetRides(userId1));
-            //var total2 = invoice.CalculateRidesFare(rideRepository.GetRides(userId2));
-            Assert.AreEqual(60, total1.totalRidesFare);
+            var total2 = invoice.CalculateRidesFare(rideRepository.GetRides(userId2));
+            Assert.AreEqual(120, total2.totalRidesFare);
         }
     }
 }
