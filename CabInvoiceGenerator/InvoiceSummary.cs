@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CabInvoiceGenerator
+﻿namespace CabInvoiceGenerator
 {
     public class InvoiceSummary
     {
-        public int noOfRides { get; set; }
-        public double totalRidesFare { get; set; }
-        public double avgerageFarePerRide { get; set; }
-
-        public void AverageFarePerRideCalculate()
+        public InvoiceSummary(int noOfRides, double totalRidesFare)
         {
-            avgerageFarePerRide = totalRidesFare / noOfRides;
+            this.noOfRides = noOfRides;
+            this.totalRidesFare = totalRidesFare;
+            this.avgerageFarePerRide = totalRidesFare / noOfRides;
         }
+        public int noOfRides { get; }
+        public double totalRidesFare { get; }
+        public double avgerageFarePerRide { get;}
+
     }
 }
